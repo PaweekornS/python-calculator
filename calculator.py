@@ -3,24 +3,71 @@ class Calculator:
         return a + b
 
     def subtract(self, a, b):
-        return b - a
+        return a - b # problem 1: change b-a to a-b
 
     def multiply(self, a, b):
         result = 0
-        for i in range(b+1):
-            result = self.add(result, a)
+        if a < 0 and b < 0:   # both number are negative
+            a = (a - a) - a
+            b = (b - b) - b
+        elif b < 0:  # one of the number is negative
+            b = (b - b) - b
+            a = -a
+
+        for i in range(b):  # failure 2: change range(b + 1) to range(a)
+            result = self.add(result, a)   # change add result from a to b
+
         return result
 
     def divide(self, a, b):
         result = 0
-        while a > b:
+        sign = 1
+
+        if b == 0:
+            raise ValueError('Division by zero is not allowed')
+
+        if a < 0 and b < 0:
+            a = -a
+            b = -b
+        elif b < 0:
+            b = -b
+            sign = -1
+        elif a < 0:
+            a = -a
+            sign = -1
+
+        while a >= b:  # failure 3: change > to >=
             a = self.subtract(a, b)
             result += 1
-        return result
+
+        if sign == 1:
+            return result
+        else:
+            return result - result - result
     
     def modulo(self, a, b):
-        while a <= b:
-            a = a-b
+        if b == 0:
+            raise ValueError("Division by zero is not allowed.")
+    
+        if a < 0:
+            if b < 0:
+                a = a - a - a
+                b = b - b -b 
+                while a >= b:
+                    a -= b
+                return -a
+            else:
+                while a < 0:
+                    a += b
+        elif a >= b:   # fault 4: change > to >=
+            if b < 0:
+                b = b - b - b
+                while a > 0:
+                    a -= b
+            else:
+                while a >= b:
+                    a -= b
+
         return a
 
 # Example usage:
@@ -31,4 +78,4 @@ if __name__ == "__main__":
     print("Example: subtraction: ", calc.subtract(4, 2))
     print("Example: multiplication: ", calc.multiply(2, 3))
     print("Example: division: ", calc.divide(10, 2))
-    print("Example: modulo: ", calc.modulo(10, 3))
+    print("Example: modulo: ", calc.modulo(-7, -5))
